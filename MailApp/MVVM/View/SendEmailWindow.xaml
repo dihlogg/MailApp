@@ -1,0 +1,28 @@
+﻿<Window x:Class="MailApp.MVVM.View.SendEmailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MailApp.MVVM.View"
+        mc:Ignorable="d"
+        Title="SendEmailWindow" Height="450" Width="800">
+    <Grid>
+        <!-- Form layout for sending an email -->
+        <StackPanel Margin="10">
+            <!-- Recipient email -->
+            <TextBlock Text="Người nhận:" FontWeight="Bold" FontSize="14"/>
+            <TextBox x:Name="RecipientTextBox" FontSize="14" Height="30" Width="Auto" Margin="0,0,0,10"/>
+
+            <!-- Subject of the email -->
+            <TextBlock Text="Tiêu đề:" FontWeight="Bold" FontSize="14"/>
+            <TextBox x:Name="SubjectTextBox" FontSize="14" Height="30" Width="Auto" Margin="0,0,0,10"/>
+
+            <!-- Body of the email -->
+            <TextBlock Text="Nội dung:" FontWeight="Bold" FontSize="14"/>
+            <TextBox x:Name="BodyTextBox" FontSize="14" Height="150" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,20"/>
+
+            <!-- Send button -->
+            <Button Content="Gửi Email" FontSize="16" Padding="10,5" HorizontalAlignment="Center" Click="SendButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
