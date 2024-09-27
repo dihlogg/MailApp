@@ -13,14 +13,63 @@
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <ListBox Name="AccountList" Grid.Column="0" Margin="10" SelectionChanged="AccountList_SelectionChanged"/>
-        <ListBox Name="EmailList" Grid.Column="1" Margin="10" SelectionChanged="EmailList_SelectionChanged"/>
+        <!-- Account List Section -->
+        <Grid Grid.Column="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,5"/>
+
+                <TextBlock Text="Account List" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <ListBox Name="AccountList" Grid.Row="1" SelectionChanged="AccountList_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="160" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="5" Margin="2">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <!-- Email List Section -->
+        <Grid Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <TextBlock Text="&#xEDB3;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,5"/>
+
+                <TextBlock Text="Email List" FontWeight="Bold" Margin="0,0,0 5" VerticalAlignment="Center"/>
+            </StackPanel>
+            <ListBox Name="EmailList" Grid.Row="1" SelectionChanged="EmailList_SelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="Auto" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="5" Margin="2">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <!-- Email Content and Refresh Button -->
         <StackPanel Grid.Column="2" Margin="10">
             <TextBlock Text="Email Content:" FontWeight="Bold" Margin="0,0,0,10"/>
             <TextBox Name="EmailContent" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="200" IsReadOnly="True"/>
 
-            <Button Content="Refresh" Click="RefreshButton_Click" Margin="0,10,0,0"/>
+            <Button Content="Refresh" Click="RefreshButton_Click" Margin="0,10,0,0" Width="100" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

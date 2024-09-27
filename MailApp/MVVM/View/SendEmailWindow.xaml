@@ -5,24 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MailApp.MVVM.View"
         mc:Ignorable="d"
-        Title="SendEmailWindow" Height="450" Width="800">
+        Title="SendEmailWindow" Height="500" Width="800">
     <Grid>
         <!-- Form layout for sending an email -->
         <StackPanel Margin="10">
-            <!-- Recipient email -->
-            <TextBlock Text="Người nhận:" FontWeight="Bold" FontSize="14"/>
-            <TextBox x:Name="RecipientTextBox" FontSize="14" Height="30" Width="Auto" Margin="0,0,0,10"/>
+            <TextBlock Text="Receiver:" FontWeight="Bold" FontSize="14"/>
+            <Border CornerRadius="5" BorderThickness="1" BorderBrush="#C2E7FF" Margin="0,10,0,10">
+                <TextBox x:Name="RecipientTextBox" FontSize="14" Height="40" BorderThickness="0" Padding="5"/>
+            </Border>
 
-            <!-- Subject of the email -->
-            <TextBlock Text="Tiêu đề:" FontWeight="Bold" FontSize="14"/>
-            <TextBox x:Name="SubjectTextBox" FontSize="14" Height="30" Width="Auto" Margin="0,0,0,10"/>
+            <TextBlock Text="Tittle:" FontWeight="Bold" FontSize="14"/>
+            <Border CornerRadius="5" BorderThickness="1" BorderBrush="#C2E7FF" Margin="0,10,0,10">
+                <TextBox x:Name="SubjectTextBox" FontSize="14" Height="40" BorderThickness="0" Padding="5"/>
+            </Border>
 
-            <!-- Body of the email -->
-            <TextBlock Text="Nội dung:" FontWeight="Bold" FontSize="14"/>
-            <TextBox x:Name="BodyTextBox" FontSize="14" Height="150" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,20"/>
+            <TextBlock Text="Content:" FontWeight="Bold" FontSize="14"/>
+            <Border CornerRadius="5" BorderThickness="1" BorderBrush="#C2E7FF" Margin="0,10,0,20">
+                <TextBox x:Name="BodyTextBox" FontSize="14" Height="150" TextWrapping="Wrap" AcceptsReturn="True" BorderThickness="0" Padding="5"/>
+            </Border>
 
-            <!-- Send button -->
-            <Button Content="Gửi Email" FontSize="16" Padding="10,5" HorizontalAlignment="Center" Click="SendButton_Click"/>
+            <Button Width="130" Height="40" Background="#C2E7FF" Padding="10,5" BorderBrush="#C2E7FF" HorizontalAlignment="Center" Click="SendButton_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="10">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="5" BlurRadius="7" Opacity="0.4"/>
+                            </Border.Effect>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Send Email" FontWeight="Bold" FontSize="14" VerticalAlignment="Center" Foreground="Black"/>
+                        <TextBlock Width="10"/>
+                        <TextBlock Text="&#xE724;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Foreground="Black"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
