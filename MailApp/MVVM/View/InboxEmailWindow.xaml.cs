@@ -24,29 +24,38 @@ namespace MailApp.MVVM.View
         public InboxEmailWindow()
         {
             InitializeComponent();
+            LoadEmails();
         }
         private void LoadEmails()
         {
-            // Giả sử đây là danh sách email từ server (bạn có thể thay đổi việc lấy email từ server thật)
-            emails = new List<Email>
+            List<Email> emails = new List<Email>
             {
-                new Email { Subject = "Chào bạn", Sender = "alice@gmail.com", ReceivedDate = DateTime.Now, Body = "Đây là nội dung email chào mừng."},
-                new Email { Subject = "Thông báo", Sender = "bob@yahoo.com", ReceivedDate = DateTime.Now.AddDays(-1), Body = "Thông báo từ công ty."},
-                new Email { Subject = "Ưu đãi mới", Sender = "sale@store.com", ReceivedDate = DateTime.Now.AddDays(-2), Body = "Mua ngay với giá ưu đãi."}
+                new Email { Subject = "Email 1", Sender = "sender1@example.com", ReceivedDate = DateTime.Now, Body = "This is the body of email 1." },
+                new Email { Subject = "Email 2", Sender = "sender2@example.com", ReceivedDate = DateTime.Now, Body = "This is the body of email 2." },
+                // Thêm các email khác ở đây
             };
 
             InboxListBox.ItemsSource = emails;
         }
 
-        private void InboxListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void InboxListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (InboxListBox.SelectedItem is Email selectedEmail)
             {
-                // Hiển thị chi tiết email khi được chọn
                 EmailSubjectTextBlock.Text = selectedEmail.Subject;
                 EmailSenderTextBlock.Text = selectedEmail.Sender;
-                EmailDateTextBlock.Text = selectedEmail.ReceivedDate.ToString();
+                EmailDateTextBlock.Text = selectedEmail.ReceivedDate.ToString("g");
                 EmailBodyTextBox.Text = selectedEmail.Body;
+
+                EmailDetailsPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                EmailDetailsPanel.Visibility = Visibility.Collapsed;
+                EmailSubjectTextBlock.Text = string.Empty;
+                EmailSenderTextBlock.Text = string.Empty;
+                EmailDateTextBlock.Text = string.Empty;
+                EmailBodyTextBox.Text = string.Empty;
             }
         }
         private void OpenSendEmailWindow(object sender, RoutedEventArgs e)
