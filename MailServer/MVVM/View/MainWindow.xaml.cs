@@ -10,6 +10,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System;
+using System.Net.Sockets;
+using System.Net;
+using MailServer.Net;
 
 namespace MailServer
 {
@@ -18,61 +21,72 @@ namespace MailServer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string baseDirectory = @"C:\MailServer";
-        private string emailDirectory = @"C:\MailServer\Emails";
+        private const int Port = 11000;
+        private UdpClient udpListener;
 
         public MainWindow()
         {
             InitializeComponent();
-            LoadAccounts();
+            StartUdpListener();
         }
 
-        private void LoadAccounts()
+        private void StartUdpListener()
         {
-            if (!Directory.Exists(baseDirectory))
-            {
-                Directory.CreateDirectory(baseDirectory);
-            }
-
-            var directories = Directory.GetDirectories(baseDirectory);
-            AccountList.Items.Clear();
-            foreach (var dir in directories)
-            {
-                AccountList.Items.Add(System.IO.Path.GetFileName(dir));
-            }
+            udpListener = new UdpClient(Port);
+            Thread listenerThread = new Thread(new ThreadStart(ListenForMessages));
+            listenerThread.IsBackground = true;
+            listenerThread.Start();
         }
 
-        private void AccountList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListenForMessages()
         {
-            if (AccountList.SelectedItem != null)
-            {
-                string accountName = AccountList.SelectedItem.ToString();
-                string accountPath = System.IO.Path.Combine(baseDirectory, accountName);
+            IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, Port);
 
-                var emailFiles = Directory.GetFiles(accountPath);
-                EmailList.Items.Clear();
-                foreach (var file in emailFiles)
+            try
+            {
+                while (true)
                 {
-                    EmailList.Items.Add(System.IO.Path.GetFileName(file));
+                    byte[] receivedData = udpListener.Receive(ref remoteEndPoint);
+                    string message = Encoding.UTF8.GetString(receivedData);
+
+                    if (message.StartsWith("REGISTER"))
+                    {
+                        string[] parts = message.Split(',');
+                        if (parts.Length > 1)
+                        {
+                            string username = parts[1];
+                            Dispatcher.Invoke(() => UpdateAccountList(username));
+                        }
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error receiving data: {ex.Message}");
+            }
         }
 
-        private void EmailList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void UpdateAccountList(string username)
         {
-            if (EmailList.SelectedItem != null)
+            if (!AccountList.Items.Contains(username))
             {
-                string accountName = AccountList.SelectedItem.ToString();
-                string fileName = EmailList.SelectedItem.ToString();
-                string filePath = System.IO.Path.Combine(baseDirectory, accountName, fileName);
-
-                EmailContent.Text = File.ReadAllText(filePath);
+                AccountList.Items.Add(username);
             }
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            LoadAccounts();
+            // Optionally refresh the list or perform other actions
+        }
+
+        private void AccountList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            // Handle account selection changes if needed
+        }
+
+        private void EmailList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            // Handle email selection changes if needed
         }
     }
 }
