@@ -30,12 +30,16 @@ namespace MailApp.MVVM.View
             InitializeComponent();
         }
 
+        public static string RegisteredUsername { get; private set; }
+
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
 
             if (!string.IsNullOrEmpty(username))
             {
+                RegisteredUsername = username; // Store the username
+
                 SendMessage($"REGISTER,{username}");
                 MessageBox.Show("User registered successfully!");
 

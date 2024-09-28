@@ -48,28 +48,52 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0">
                 <TextBlock Text="&#xEDB3;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,5"/>
-
                 <TextBlock Text="Email List" FontWeight="Bold" Margin="0,0,0 5" VerticalAlignment="Center"/>
             </StackPanel>
-            <ListBox Name="EmailList" Grid.Row="1" SelectionChanged="EmailList_SelectionChanged">
+
+            <ListBox Name="EmailList" Grid.Row="1" ItemsSource="{Binding emailList}" SelectionChanged="EmailList_SelectionChanged" Background="White" BorderThickness="0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Width="Auto" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="5" Margin="2">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Margin="0,0,0,1">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Subject}" FontWeight="Bold" />
+                                <TextBlock Text="{Binding SenderName}" FontStyle="Italic" />
+                                <TextBlock Text="{Binding Recipient}" FontStyle="Italic" />
+                                <TextBlock Text="{Binding ReceivedDate}" FontSize="10" />
                             </StackPanel>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="White"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                            <Setter Property="Background" Value="LightBlue"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                         </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
 
-        <!-- Email Content and Refresh Button -->
-        <StackPanel Grid.Column="2" Margin="10">
+        <!-- Email Content Section -->
+        <StackPanel Grid.Column="2" Margin="10" x:Name="EmailDetailsPanel" Visibility="Collapsed">
             <TextBlock Text="Email Content:" FontWeight="Bold" Margin="0,0,0,10"/>
-            <TextBox Name="EmailContent" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="200" IsReadOnly="True"/>
+            <TextBlock Text="Title:" FontWeight="Bold" FontSize="14"/>
+            <TextBlock x:Name="EmailSubjectTextBlock" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,10"/>
 
-            <Button Content="Refresh" Click="RefreshButton_Click" Margin="0,10,0,0" Width="100" HorizontalAlignment="Center"/>
+            <TextBlock Text="Sender:" FontWeight="Bold" FontSize="14"/>
+            <TextBlock x:Name="EmailSenderTextBlock" FontSize="14" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Recipient:" FontWeight="Bold" FontSize="14"/>
+            <TextBlock x:Name="EmaiRecipientTextBlock" FontSize="14" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Date Received:" FontWeight="Bold" FontSize="14"/>
+            <TextBlock x:Name="EmailDateTextBlock" FontSize="14" Margin="0,0,0,10"/>
+
+            <TextBlock Text="Content:" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
+            <TextBox x:Name="EmailBodyTextBox" FontSize="14" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" Height="200" Background="LightGray"/>
         </StackPanel>
     </Grid>
 </Window>

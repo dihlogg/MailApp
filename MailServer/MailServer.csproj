@@ -10,7 +10,10 @@
 
   <ItemGroup>
     <Folder Include="MVVM\Model\" />
-    <Folder Include="Net\IO\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SmtpServer" Version="10.0.1" />
   </ItemGroup>
 
 </Project>
