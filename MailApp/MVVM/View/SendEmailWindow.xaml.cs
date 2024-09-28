@@ -1,7 +1,10 @@
-﻿using System;
+﻿using MailApp.MVVM.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,22 +23,35 @@ namespace MailApp.MVVM.View
     /// </summary>
     public partial class SendEmailWindow : Window
     {
-        public SendEmailWindow()
+        private InboxEmailWindow inboxEmailWindow;
+
+        public SendEmailWindow(InboxEmailWindow inbox)
         {
             InitializeComponent();
+            inboxEmailWindow = inbox;
         }
         private void SendButton_Click(object sender, RoutedEventArgs e)
         {
-            // Lấy thông tin từ các trường nhập liệu
             string recipient = RecipientTextBox.Text;
             string subject = SubjectTextBox.Text;
             string body = BodyTextBox.Text;
 
-            // Gọi phương thức để gửi email
             try
             {
-                SendEmail(recipient, subject, body);
-                MessageBox.Show("Email đã được gửi thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                string senderName = RegisterWindow.RegisteredUsername; // Get the registered username
+
+                SendEmailViaUdp(senderName, "test1@localhost.com", recipient, subject, body); // Pass the senderName
+                MessageBox.Show("Email đã được gửi thành công qua UDP!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Create a new Email object to add to the inbox
+                var newEmail = new Email
+                {
+                    Subject = subject,
+                    Sender = senderName, // Use the senderName here
+                    ReceivedDate = DateTime.Now, // You can adjust this as necessary
+                    Body = body
+                };
+                inboxEmailWindow.AddEmail(newEmail); // Add email to the inbox
             }
             catch (Exception ex)
             {
@@ -43,29 +59,51 @@ namespace MailApp.MVVM.View
             }
         }
 
-        private void SendEmail(string recipient, string subject, string body)
+        private void SendEmailViaUdp(string senderName, string senderEmail, string recipient, string subject, string body)
         {
-            // Cấu hình máy chủ SMTP
-            SmtpClient smtpClient = new SmtpClient("smtp.your-email-server.com") // thay đổi với máy chủ email thật
+            using (UdpClient udpClient = new UdpClient())
             {
-                Port = 587, // cổng SMTP (có thể là 465 hoặc 587 tùy dịch vụ email)
-                Credentials = new System.Net.NetworkCredential("your-email@example.com", "your-password"),
-                EnableSsl = true, // Sử dụng SSL nếu cần
-            };
-
-            // Tạo đối tượng MailMessage để gửi email
-            MailMessage mail = new MailMessage
-            {
-                From = new MailAddress("your-email@example.com"), // Thay đổi bằng email của bạn
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = false // Đặt thành true nếu nội dung email là HTML
-            };
-
-            mail.To.Add(recipient); // Thêm người nhận
-
-            // Gửi email
-            smtpClient.Send(mail);
+                string message = $"{senderEmail}|{recipient}|{subject}|{body}|{senderName}"; // Add sender name
+                byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+                udpClient.Send(messageBytes, messageBytes.Length, "localhost", 11000); // Send to UDP server
+            }
         }
     }
+
+    //private void SendEmail(string recipient, string subject, string body)
+    //    {
+    //        //SmtpClient smtpClient = new SmtpClient("smtp.your-email-server.com")
+    //        //{
+    //        //    Port = 587,
+    //        //    Credentials = new System.Net.NetworkCredential("your-email@example.com", "your-password"),
+    //        //    EnableSsl = true,
+
+    //        //};
+
+    //        //// Tạo đối tượng MailMessage để gửi email
+    //        //MailMessage mail = new MailMessage
+    //        //{
+    //        //    From = new MailAddress("your-email@example.com"),
+    //        //    Subject = subject,
+    //        //    Body = body,
+    //        //    IsBodyHtml = false
+    //        //};
+
+    //        //mail.To.Add(recipient);
+    //        //smtpClient.Send(mail);
+    //        MailMessage mail = new MailMessage();
+    //        SmtpClient smtpServer = new SmtpClient("localhost");
+
+    //        mail.From = new MailAddress("test1@localhost.com"); // Your valid email
+    //        mail.To.Add("test2@localhost.com");                  // Recipient's valid email
+    //        mail.Subject = "Test Mail";
+    //        mail.Body = "This is for testing SMTP mail from C#";
+
+    //        smtpServer.Port = 2525;
+    //        //smtpServer.Credentials = new NetworkCredential("your-email@example.com", "your-password");
+    //        smtpServer.EnableSsl = false;
+
+    //        smtpServer.Send(mail);
+    //    }
+    //}
 }

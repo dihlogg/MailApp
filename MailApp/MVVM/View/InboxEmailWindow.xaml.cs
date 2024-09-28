@@ -21,21 +21,25 @@ namespace MailApp.MVVM.View
     public partial class InboxEmailWindow : Window
     {
         private List<Email> emails;
+
         public InboxEmailWindow()
         {
             InitializeComponent();
+            emails = new List<Email>();
             LoadEmails();
         }
+
         private void LoadEmails()
         {
-            List<Email> emails = new List<Email>
-            {
-                new Email { Subject = "Email 1", Sender = "sender1@example.com", ReceivedDate = DateTime.Now, Body = "This is the body of email 1." },
-                new Email { Subject = "Email 2", Sender = "sender2@example.com", ReceivedDate = DateTime.Now, Body = "This is the body of email 2." },
-                // Thêm các email khác ở đây
-            };
-
+            // Initialize with some default emails if needed
+            emails.Add(new Email { Subject = "Welcome!", Sender = "server@example.com", ReceivedDate = DateTime.Now, Body = "Your account has been created." });
             InboxListBox.ItemsSource = emails;
+        }
+
+        public void AddEmail(Email newEmail)
+        {
+            emails.Add(newEmail);
+            InboxListBox.Items.Refresh(); // Refresh the ListBox to show the new email
         }
 
         private void InboxListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -60,7 +64,7 @@ namespace MailApp.MVVM.View
         }
         private void OpenSendEmailWindow(object sender, RoutedEventArgs e)
         {
-            SendEmailWindow sendEmailWindow = new SendEmailWindow();
+            SendEmailWindow sendEmailWindow = new SendEmailWindow(this);
             sendEmailWindow.Show();
         }
     }

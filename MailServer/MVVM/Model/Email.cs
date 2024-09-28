@@ -9,17 +9,11 @@ namespace MailServer.MVVM.Model
     public class Email
     {
         public string Sender { get; set; }
+        public string SenderName { get; set; }
         public string Recipient { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
         public DateTime SentDate { get; set; } = DateTime.Now;
-
-        public Email(string sender, string recipient, string subject, string body)
-        {
-            Sender = sender;
-            Recipient = recipient;
-            Subject = subject;
-            Body = body;
-        }
+        public DateTime ReceivedDate { get; set; } = DateTime.Now;
     }
 }
