@@ -38,16 +38,14 @@ namespace MailApp.MVVM.View
 
             if (!string.IsNullOrEmpty(username))
             {
-                RegisteredUsername = username; // Store the username
+                RegisteredUsername = username;
 
                 SendMessage($"REGISTER,{username}");
                 MessageBox.Show("User registered successfully!");
 
-                // Navigate to LoginWindow
-                InboxEmailWindow inboxEmailWindow = new InboxEmailWindow();
+                InboxEmailWindow inboxEmailWindow = new InboxEmailWindow(username);
                 inboxEmailWindow.Show();
 
-                // Close the RegisterWindow
                 this.Close();
             }
             else
@@ -55,6 +53,7 @@ namespace MailApp.MVVM.View
                 MessageBox.Show("Please enter a username.");
             }
         }
+
 
         private void SendMessage(string message)
         {

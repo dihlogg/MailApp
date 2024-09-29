@@ -48,18 +48,33 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0">
                 <TextBlock Text="&#xEDB3;" FontFamily="Segoe MDL2 Assets" FontSize="20" VerticalAlignment="Center" Margin="0,0,10,5"/>
-                <TextBlock Text="Email List" FontWeight="Bold" Margin="0,0,0 5" VerticalAlignment="Center"/>
+                <TextBlock Text="Email List" FontWeight="Bold" Margin="0,0,0,5" VerticalAlignment="Center"/>
             </StackPanel>
 
-            <ListBox Name="EmailList" Grid.Row="1" ItemsSource="{Binding emailList}" SelectionChanged="EmailList_SelectionChanged" Background="White" BorderThickness="0">
+            <ListBox Name="EmailList" Grid.Row="1" ItemsSource="{Binding emailList}" SelectionChanged="EmailList_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Margin="0,0,0,1">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Subject}" FontWeight="Bold" />
-                                <TextBlock Text="{Binding SenderName}" FontStyle="Italic" />
-                                <TextBlock Text="{Binding Recipient}" FontStyle="Italic" />
-                                <TextBlock Text="{Binding ReceivedDate}" FontSize="10" />
+                        <Border Width="255" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Padding="5" Margin="2">
+                            <StackPanel Background="White">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Text="Title: " FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Subject}" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Text="Sender: " FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding SenderName}" FontStyle="Italic" FontSize="12" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Text="Recipient: " FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Recipient}" FontStyle="Italic" FontSize="12" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Text="Date: " FontWeight="Bold" FontSize="12" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding ReceivedDate}" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                </StackPanel>
                             </StackPanel>
                             <Border.Style>
                                 <Style TargetType="Border">
@@ -76,6 +91,7 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
+
 
         <!-- Email Content Section -->
         <StackPanel Grid.Column="2" Margin="10" x:Name="EmailDetailsPanel" Visibility="Collapsed">

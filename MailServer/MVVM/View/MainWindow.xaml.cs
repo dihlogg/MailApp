@@ -25,15 +25,15 @@ namespace MailServer
     public partial class MainWindow : Window
     {
         public ObservableCollection<string> Emails { get; set; } = new ObservableCollection<string>();
-        private const int Port = 11000; // UDP listening port
+        private const int Port = 11000;
         private UdpClient udpListener;
         private ObservableCollection<Email> emailList = new ObservableCollection<Email>();
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this; // Set the DataContext to the current instance
-            EmailList.ItemsSource = emailList; // Set the initial ItemsSource
+            DataContext = this;
+            EmailList.ItemsSource = emailList;
             StartUdpListener();
         }
 
@@ -56,29 +56,53 @@ namespace MailServer
         //            byte[] receivedData = udpListener.Receive(ref remoteEndPoint);
         //            string message = Encoding.UTF8.GetString(receivedData);
 
-        //            Dispatcher.Invoke(() =>
+        //            if (message.StartsWith("REGISTER"))
         //            {
-        //                if (!string.IsNullOrEmpty(message))
+        //                string[] parts = message.Split(',');
+        //                if (parts.Length > 1)
         //                {
-        //                    // Parse the received message
-        //                    string[] parts = message.Split('|');
-        //                    if (parts.Length == 4)
-        //                    {
-        //                        string senderEmail = parts[0];
-        //                        string recipientEmail = parts[1];
-        //                        string subject = parts[2];
-        //                        string body = parts[3];
+        //                    string username = parts[1];
 
-        //                        // Send the email via SMTP
-        //                        bool emailSent = SendEmail(senderEmail, recipientEmail, subject, body);
-        //                        Emails.Add(emailSent ? $"Email sent from {senderEmail} to {recipientEmail}" : $"Failed to send email from {senderEmail}");
-        //                    }
-        //                    else
+        //                    Dispatcher.Invoke(() => UpdateAccountList(username));
+
+        //                    var welcomeEmail = new Email
         //                    {
-        //                        Emails.Add("Invalid email message format.");
-        //                    }
+        //                        Sender = "MailServer@gmail.com",
+        //                        SenderName = "MailServer@gmail.com",
+        //                        Recipient = username,
+        //                        Subject = "Welcome!!!",
+        //                        Body = "Your account has been created!!!. Thank you for using this service. We hope you will feel comfortable using our service",
+        //                        ReceivedDate = DateTime.Now
+        //                    };
+
+        //                    // Cập nhật danh sách email
+        //                    Dispatcher.Invoke(() => UpdateEmailList(welcomeEmail));
         //                }
-        //            });
+        //            }
+        //            else
+        //            {
+        //                string[] parts = message.Split('|');
+        //                if (parts.Length == 5)
+        //                {
+        //                    string senderEmail = parts[0];
+        //                    string recipientEmail = parts[1];
+        //                    string subject = parts[2];
+        //                    string body = parts[3];
+        //                    string senderName = parts[4];
+
+        //                    var email = new Email
+        //                    {
+        //                        Sender = senderEmail,
+        //                        SenderName = senderName,
+        //                        Recipient = recipientEmail,
+        //                        Subject = subject,
+        //                        Body = body,
+        //                        ReceivedDate = DateTime.Now
+        //                    };
+
+        //                    Dispatcher.Invoke(() => UpdateEmailList(email));
+        //                }
+        //            }
         //        }
         //    }
         //    catch (Exception ex)
@@ -100,13 +124,9 @@ namespace MailServer
 
                     if (message.StartsWith("REGISTER"))
                     {
-                        string[] parts = message.Split(',');
-                        if (parts.Length > 1)
-                        {
-                            string username = parts[1];
-                            Dispatcher.Invoke(() => UpdateAccountList(username));
-                        }
-                    } else
+                        HandleRegistration(message);
+                    }
+                    else
                     {
                         string[] parts = message.Split('|');
                         if (parts.Length == 5)
@@ -115,19 +135,23 @@ namespace MailServer
                             string recipientEmail = parts[1];
                             string subject = parts[2];
                             string body = parts[3];
-                            string senderName = parts[4]; // Get the sender's name
+                            string senderName = parts[4];
 
-                            // Create a new email object
-                            var email = new Email
+                            // Check if the recipient is in the account list
+                            if (AccountList.Items.Contains(recipientEmail))
                             {
-                                Sender = senderEmail,
-                                SenderName = senderName,
-                                Recipient = recipientEmail,
-                                Subject = subject,
-                                Body = body,
-                                ReceivedDate = DateTime.Now
-                            };
-                            Dispatcher.Invoke(() => UpdateEmailList(email));
+                                var email = new Email
+                                {
+                                    Sender = senderEmail,
+                                    SenderName = senderName,
+                                    Recipient = recipientEmail,
+                                    Subject = subject,
+                                    Body = body,
+                                    ReceivedDate = DateTime.Now
+                                };
+
+                                Dispatcher.Invoke(() => UpdateEmailList(email));
+                            }
                         }
                     }
                 }
@@ -138,10 +162,33 @@ namespace MailServer
             }
         }
 
+        private void HandleRegistration(string message)
+        {
+            string[] parts = message.Split(',');
+            if (parts.Length > 1)
+            {
+                string username = parts[1];
+                Dispatcher.Invoke(() => UpdateAccountList(username));
+
+                var welcomeEmail = new Email
+                {
+                    Sender = "MailServer@gmail.com",
+                    SenderName = "MailServer@gmail.com",
+                    Recipient = username,
+                    Subject = "Welcome!!!",
+                    Body = "Your account has been created!!! Thank you for using this service. We hope you feel comfortable using it.",
+                    ReceivedDate = DateTime.Now
+                };
+
+                Dispatcher.Invoke(() => UpdateEmailList(welcomeEmail));
+            }
+        }
+
+
+
         private void UpdateEmailList(Email email)
         {
             emailList.Add(email);
-
             EmailList.ItemsSource = emailList;
         }
 

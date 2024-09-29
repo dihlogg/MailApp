@@ -9,14 +9,14 @@
     <Grid>
         <!-- Form layout for sending an email -->
         <StackPanel Margin="10">
-            <TextBlock Text="Receiver:" FontWeight="Bold" FontSize="14"/>
+            <TextBlock Text="Recipient:" FontWeight="Bold" FontSize="14"/>
             <Border CornerRadius="5" BorderThickness="1" BorderBrush="#C2E7FF" Margin="0,10,0,10">
-                <TextBox x:Name="RecipientTextBox" FontSize="14" Height="40" BorderThickness="0" Padding="5"/>
+                <TextBox x:Name="RecipientTextBox" FontSize="14" Height="40" BorderThickness="0" Padding="5" VerticalContentAlignment="Center"/>
             </Border>
 
             <TextBlock Text="Tittle:" FontWeight="Bold" FontSize="14"/>
             <Border CornerRadius="5" BorderThickness="1" BorderBrush="#C2E7FF" Margin="0,10,0,10">
-                <TextBox x:Name="SubjectTextBox" FontSize="14" Height="40" BorderThickness="0" Padding="5"/>
+                <TextBox x:Name="SubjectTextBox" FontSize="14" Height="40" BorderThickness="0" Padding="5" VerticalContentAlignment="Center"/>
             </Border>
 
             <TextBlock Text="Content:" FontWeight="Bold" FontSize="14"/>

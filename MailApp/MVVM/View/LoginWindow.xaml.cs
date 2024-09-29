@@ -49,7 +49,7 @@ namespace MailApp.MVVM.View
                     {
                         MessageBox.Show("Login successful!");
                         // Open InboxSendWindow after successful login
-                        InboxEmailWindow inboxEmailWindow = new InboxEmailWindow();
+                        InboxEmailWindow inboxEmailWindow = new InboxEmailWindow(username);
                         inboxEmailWindow.Show();
                         this.Close(); // Close the login window
                     }
