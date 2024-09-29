@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace MailApp.MVVM.View
 {
@@ -21,25 +24,47 @@ namespace MailApp.MVVM.View
     public partial class InboxEmailWindow : Window
     {
         private List<Email> emails;
+        private string _username;
+        private ObservableCollection<Email> emailList = new ObservableCollection<Email>();
 
-        public InboxEmailWindow()
+        public InboxEmailWindow(string username)
         {
             InitializeComponent();
+            _username = username;
             emails = new List<Email>();
             LoadEmails();
+
+            HelloLabel.Content = "Hello: " + _username;
+        }
+
+
+        public void ReceiveEmail(string senderEmail, string recipient, string subject, string body)
+        {
+            if (_username == recipient)
+            {
+                var newEmail = new Email
+                {
+                    Subject = subject,
+                    Sender = senderEmail,
+                    Recipient = recipient,
+                    ReceivedDate = DateTime.Now,
+                    Body = body
+                };
+
+                emailList.Add(newEmail);
+            }
         }
 
         private void LoadEmails()
         {
-            // Initialize with some default emails if needed
-            emails.Add(new Email { Subject = "Welcome!", Sender = "server@example.com", ReceivedDate = DateTime.Now, Body = "Your account has been created." });
+            emails.Add(new Email { Subject = "Welcome!!!", Sender = "MailServer@gmail.com", ReceivedDate = DateTime.Now, Body = "Your account has been created!!!. Thank you for using this service. We hope you will feel comfortable using our service" });
             InboxListBox.ItemsSource = emails;
         }
 
         public void AddEmail(Email newEmail)
         {
             emails.Add(newEmail);
-            InboxListBox.Items.Refresh(); // Refresh the ListBox to show the new email
+            InboxListBox.Items.Refresh();
         }
 
         private void InboxListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

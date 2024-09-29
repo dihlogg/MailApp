@@ -11,6 +11,7 @@ namespace MailApp.MVVM.Model
         public string Subject { get; set; }
         public string Sender { get; set; }
         public string SenderName { get; set; }
+        public string Recipient { get; set; }
         public DateTime ReceivedDate { get; set; }
         public string Body { get; set; }
     }
